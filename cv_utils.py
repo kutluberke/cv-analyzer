@@ -117,8 +117,9 @@ def extract_pdf_full(uploaded_file) -> dict:
         if page.get_images():
             has_images = True
 
+    page_count = doc.page_count   # ← close'dan ÖNCE kaydet
     doc.close()
-
+    
     return {
         "text":       full_text.strip(),
         "page_count": doc.page_count,
