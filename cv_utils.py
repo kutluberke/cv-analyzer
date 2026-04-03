@@ -89,7 +89,6 @@ CONTACT_PATTERNS = {
 def extract_pdf_full(uploaded_file) -> dict:
     """
     PDF'ten hem metni hem yapısal metadata'yı tek seferde çıkar.
-    Streamlit'te dosya ikinci kez okunamazsa seek(0) kullan.
     """
     try:
         uploaded_file.seek(0)
@@ -99,36 +98,33 @@ def extract_pdf_full(uploaded_file) -> dict:
     raw_bytes = uploaded_file.read()
     doc = fitz.open(stream=raw_bytes, filetype="pdf")
 
-    full_text = ""
+    full_text  = ""
     has_columns = False
     has_images  = False
+    page_count  = doc.page_count   # ← close'dan ÖNCE kaydet
 
     for page in doc:
         full_text += page.get_text()
 
-        # Kolon tespiti: bloklar yatayda >200px arayla dizilmişse çok kolonlu
         blocks = page.get_text("blocks")
         if len(blocks) > 3:
             x_coords = [b[0] for b in blocks]
             if max(x_coords) - min(x_coords) > 200:
                 has_columns = True
 
-        # Görsel / fotoğraf tespiti
         if page.get_images():
             has_images = True
 
-    page_count = doc.page_count   # ← close'dan ÖNCE kaydet
-    doc.close()
-    
+    doc.close()   # ← artık page_count kayıtlı, güvenle kapat
+
     return {
-        "text":       full_text.strip(),
-        "page_count": doc.page_count,
+        "text":        full_text.strip(),
+        "page_count":  page_count,        # ← kayıtlı değeri kullan
         "has_columns": has_columns,
         "has_images":  has_images,
         "char_count":  len(full_text),
         "word_count":  len(full_text.split()),
     }
-
 
 # ── Bölüm Tespiti ────────────────────────────────────────────────────────────
 
