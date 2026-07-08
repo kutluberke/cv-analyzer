@@ -41,5 +41,5 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları i
 
 1. **Repoyu Klonlayın:**
    ```bash
-   git clone [https://github.com/KullaniciAdin/modern-ats-cv-analyzer.git](https://github.com/KullaniciAdin/modern-ats-cv-analyzer.git)
-   cd modern
+   git clone [https://github.com/KullaniciAdin/modern-ats-cv-analyzer.git](https://github.com/kutluberke/cv-analyzer.git)
+   cd cv-analyzer
